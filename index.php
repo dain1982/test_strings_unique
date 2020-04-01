@@ -150,13 +150,16 @@ class Unique_Strings {
                 $checksum = md5($result);
                 $sql_parts[] = '(null,"' . $this->db->escape($result) . '","' . $checksum . '")';
             }
-        }
-        $sql = '
-            INSERT INTO `' . $this->results_table_name . '` 
-            VALUES ' . implode(',', $sql_parts) . ' 
-            ON DUPLICATE KEY UPDATE `id` = `id`';
-        if ($this->db->query($sql)) {
-            $ret = $this->db->affected();
+
+            if (count($sql_parts) > 0) {
+                $sql = '
+                    INSERT INTO `' . $this->results_table_name . '` 
+                    VALUES ' . implode(',', $sql_parts) . ' 
+                    ON DUPLICATE KEY UPDATE `id` = `id`';
+                if ($this->db->query($sql)) {
+                    $ret = $this->db->affected();
+                }
+            }
         }
         return $ret;
     }
